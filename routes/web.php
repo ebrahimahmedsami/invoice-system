@@ -27,6 +27,8 @@ Route::get('invoices', [\App\Http\Controllers\InvoicesController::class,'getAllI
 Route::get('editInvoices', [\App\Http\Controllers\InvoicesController::class,'getEditInvoices'])->name('edit.invoice');
 Route::get('section/{section_id}', [\App\Http\Controllers\InvoicesController::class,'getProducts'])->name('getSectionProducts');
 Route::post('invoices/store', [\App\Http\Controllers\InvoicesController::class,'store']);
+Route::get('invoice/edit/{invoice_id}', [\App\Http\Controllers\InvoicesController::class,'edit']);
+Route::post('invoice/update', [\App\Http\Controllers\InvoicesController::class,'update']);
 
 ###################################################################
 
@@ -35,7 +37,6 @@ Route::get('invoices/details/{invoice_id}', [\App\Http\Controllers\InvoicesDetai
 Route::get('view-file/{file_name}', [\App\Http\Controllers\InvoicesDetailsController::class,'view_file']);
 Route::get('download-file/{file_name}', [\App\Http\Controllers\InvoicesDetailsController::class,'download_file']);
 Route::get('delete-file/{attachment_id}/{file_name}', [\App\Http\Controllers\InvoicesDetailsController::class,'delete_file']);
-
 ###################################################################
 
 ################# invoiceAttachment routes ##################################

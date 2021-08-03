@@ -9,6 +9,7 @@ use App\Models\Sections;
 use App\Traits\OfferTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\In;
 
 class InvoicesController extends Controller
 {
@@ -125,9 +126,15 @@ class InvoicesController extends Controller
      * @param  \App\Models\Invoices  $invoices
      * @return \Illuminate\Http\Response
      */
-    public function edit(Invoices $invoices)
+    public function edit($invoice_id)
     {
-        //
+        $invoice = Invoices::find($invoice_id)->first();
+        if(!$invoice){
+            return redirect()->back();
+        }
+        $sections = Sections::all();
+        return view('invoices.editallinvoice',compact('invoice','sections'));
+
     }
 
     /**
@@ -137,9 +144,39 @@ class InvoicesController extends Controller
      * @param  \App\Models\Invoices  $invoices
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Invoices $invoices)
+    public function update(Request $request)
     {
-        //
+        $invoice = Invoices::find($request->invoice_id)->first();
+        $invoice->where('id', $request->invoice_id)->update([
+            'invoice_number' => $request->invoice_number,
+            'invoice_date' => $request->invoice_Date,
+            'due_date' => $request->Due_date,
+            'section' => $request->section,
+            'product' => $request->product,
+            'amount_collection' => $request->Amount_collection,
+            'amount_commission' => $request->Amount_Commission,
+            'discount' => $request->Discount,
+            'rate_vat' => $request->Rate_VAT,
+            'value_vat' => $request->Value_VAT,
+            'total' => $request->Total,
+            'note' => $request->note,
+        ]);
+
+        $invoice_details = InvoicesDetails::where('invoice_id', $request->invoice_id)->update([
+            'invoice_number' => $request->invoice_number,
+            'section' => $request->section,
+            'product' => $request->product,
+            'note' => $request->note,
+            'user' => Auth::user()->name,
+        ]);
+
+        $invoice_attachments = InvoicesAttachment::where('invoice_id', $request->invoice_id)->update([
+            'invoice_number' => $request->invoice_number,
+            'user' => Auth::user()->name,
+        ]);
+
+        return redirect()->back()->with(['success' => 'تم تعديل الفاتورة بنجاح']);
+
     }
 
     /**
