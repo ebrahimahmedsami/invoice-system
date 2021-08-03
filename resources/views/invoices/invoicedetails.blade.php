@@ -28,6 +28,11 @@
             <div class="alert alert-success">
                 {{\Illuminate\Support\Facades\Session::get('delete')}}
             </div>
+        @endif
+            @if(\Illuminate\Support\Facades\Session::has('attach_success'))
+                <div class="alert alert-success">
+                    {{\Illuminate\Support\Facades\Session::get('attach_success')}}
+                </div>
             @endif
         <div class="col-xl-12">
             <!-- div -->
@@ -153,6 +158,19 @@
 
                                         </div>
                                         <div class="tab-pane" id="tab6">
+                                            <form method="post" action="{{url('attachment/add')}}" enctype="multipart/form-data">
+                                                @csrf
+                                                <input type="hidden" class="form-control" name="id" value="{{$invoice->id}}">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1">اضافة مرفق</label>
+                                                    <input type="file" class="form-control" name="pic" required>
+                                                    @error('pic')
+                                                    <small class="form-text text-danger">{{$message}}</small>
+                                                    @enderror
+                                                </div>
+                                                <button type="submit" class="btn btn-main-primary pd-x-20">اضافة مرفق</button>
+                                            </form>
+
                                             <div class="table-responsive">
                                                 <table class="table text-md-nowrap" id="example1" data-page-length="50">
                                                     <thead>

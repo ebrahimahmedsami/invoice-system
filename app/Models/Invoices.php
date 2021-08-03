@@ -11,7 +11,7 @@ class Invoices extends Model
     protected $guarded =[];
 
     public function invoiceDetails(){
-        return $this->hasMany('App\Models\InvoicesDetails','invoice_id','id');
+        return $this->hasOne('App\Models\InvoicesDetails','invoice_id','id');
     }
 
     public function invoiceAttachmets(){

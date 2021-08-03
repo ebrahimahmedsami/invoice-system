@@ -29,6 +29,7 @@ Route::get('section/{section_id}', [\App\Http\Controllers\InvoicesController::cl
 Route::post('invoices/store', [\App\Http\Controllers\InvoicesController::class,'store']);
 
 ###################################################################
+
 ################# invoicesDetails routes ##################################
 Route::get('invoices/details/{invoice_id}', [\App\Http\Controllers\InvoicesDetailsController::class,'details'])->name('get.invoice.details');
 Route::get('view-file/{file_name}', [\App\Http\Controllers\InvoicesDetailsController::class,'view_file']);
@@ -36,6 +37,11 @@ Route::get('download-file/{file_name}', [\App\Http\Controllers\InvoicesDetailsCo
 Route::get('delete-file/{attachment_id}/{file_name}', [\App\Http\Controllers\InvoicesDetailsController::class,'delete_file']);
 
 ###################################################################
+
+################# invoiceAttachment routes ##################################
+Route::post('attachment/add', [\App\Http\Controllers\InvoicesAttachmentController::class,'store']);
+###################################################################
+
 ################# sections routes ##################################
 Route::get('sections', [\App\Http\Controllers\SectionsController::class,'getAllSections'])->name('all.sections');
 Route::post('section/store', [\App\Http\Controllers\SectionsController::class,'store'])->name('store.section');
