@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    قائمة الفواتير
+     الفواتير  المدفوعة جزئيا
 @stop
 @section('css')
     <!-- Internal Data table css -->
@@ -17,7 +17,7 @@
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto"> الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة الفواتير</span>
+							<h4 class="content-title mb-0 my-auto"> الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الفواتير المدفوعة جزئيا</span>
 						</div>
 					</div>
 				</div>
@@ -53,11 +53,10 @@
             <div class="card">
                 <div class="card-header pb-0">
                     <div class="d-flex justify-content-between">
-                        <h4 class="card-title mg-b-0">قائمة الفواتير</h4>
+                        <h4 class="card-title mg-b-0">الفواتير المدفوعة جزئيا</h4>
                     </div>
                 </div>
                 <div class="card-body">
-                    <a href="{{route('edit.invoice')}}"><button style="margin-bottom: 10px;font-weight: bold;" class="btn btn-primary">إضافة فاتورة</button></a>
                     <div class="table-responsive">
                         <table class="table text-md-nowrap" id="example1" data-page-length="50">
                             <thead>

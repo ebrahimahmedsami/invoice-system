@@ -9,6 +9,7 @@ use App\Models\Sections;
 use App\Traits\OfferTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\In;
 
 class InvoicesController extends Controller
@@ -33,6 +34,22 @@ class InvoicesController extends Controller
 
        return view('invoices.allinvoices',compact('invoices'));
     }
+
+    public function paidInvoices(){
+        $invoices = Invoices::where('value_status',1)->with('sections')->get();
+        return view('invoices.paidinvoices',compact('invoices'));
+    }
+
+    public function unpaidInvoices(){
+        $invoices = Invoices::where('value_status',2)->with('sections')->get();
+        return view('invoices.unpaidinvoices',compact('invoices'));
+    }
+
+    public function partpaidInvoices(){
+        $invoices = Invoices::where('value_status',3)->with('sections')->get();
+        return view('invoices.partpaidinvoices',compact('invoices'));
+    }
+
     public function getEditInvoices(){
         $sections = Sections::all();
         return view('invoices.edit-invoice',compact('sections'));
@@ -179,14 +196,77 @@ class InvoicesController extends Controller
 
     }
 
+    public function editStatus($invoice_id){
+
+        $invoice = Invoices::find($invoice_id);
+        return view('invoices.editstatus',compact('invoice'));
+    }
+
+    public function updateStatus(Request $request){
+
+        $invoice = Invoices::find($request->invoice_id);
+
+        if($request->status === 'مدفوعة'){
+            $invoice->update([
+                'status' => $request->status,
+                'value_status' => 1,
+                'payment_date' => $request->payment_date,
+            ]);
+            $invoice_details = InvoicesDetails::create([
+                'invoice_id' => $request->invoice_id,
+                'invoice_number' => $invoice->invoice_number,
+                'section' => $invoice->section,
+                'product' => $invoice->product,
+                'status' => $request->status,
+                'value_status' => 1,
+                'payment_date' => $request->payment_date,
+                'note' => $invoice->note,
+                'user' => Auth::user()->name,
+            ]);
+            return redirect()->back()->with(['success_status' => 'تم تعديل حالة الفاتورة بنجاح']);
+        }else{
+            $invoice->update([
+                'status' => $request->status,
+                'value_status' => 3,
+                'payment_date' => $request->payment_date,
+            ]);
+            $invoice_details = InvoicesDetails::create([
+                'invoice_id' => $request->invoice_id,
+                'invoice_number' => $invoice->invoice_number,
+                'section' => $invoice->section,
+                'product' => $invoice->product,
+                'status' => $request->status,
+                'value_status' => 3,
+                'payment_date' => $request->payment_date,
+                'note' => $invoice->note,
+                'user' => Auth::user()->name,
+            ]);
+            return redirect()->back()->with(['success_status' => 'تم تعديل حالة الفاتورة بنجاح']);
+        }
+    }
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Invoices  $invoices
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Invoices $invoices)
+    public function destroy($invoice_id)
     {
-        //
+        $invoice = Invoices::find($invoice_id);
+        $details = InvoicesDetails::where('invoice_id',$invoice_id)->first();
+        $attachment = InvoicesAttachment::where('invoice_id',$invoice_id)->get();
+
+        if(!$invoice){
+            return redirect()->back();
+        }
+        $details->delete();
+        foreach ($attachment as $a){
+            $a->delete();
+            $files = Storage::disk('invoice_uploads')->delete($a->file_name);
+        }
+        $invoice->forceDelete();
+
+        return redirect()->back()->with(['success_status' => 'تم حذف الفاتورة بنجاح']);
+
     }
 }

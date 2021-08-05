@@ -29,6 +29,12 @@ Route::get('section/{section_id}', [\App\Http\Controllers\InvoicesController::cl
 Route::post('invoices/store', [\App\Http\Controllers\InvoicesController::class,'store']);
 Route::get('invoice/edit/{invoice_id}', [\App\Http\Controllers\InvoicesController::class,'edit']);
 Route::post('invoice/update', [\App\Http\Controllers\InvoicesController::class,'update']);
+Route::get('invoice/delete/{invoice_id}', [\App\Http\Controllers\InvoicesController::class,'destroy']);
+Route::get('invoice/editstatus/{invoice_id}', [\App\Http\Controllers\InvoicesController::class,'editStatus']);
+Route::post('invoice/updatestatus', [\App\Http\Controllers\InvoicesController::class,'updateStatus'])->name('update.status.invoice');
+Route::get('invoices/paid', [\App\Http\Controllers\InvoicesController::class,'paidInvoices'])->name('paid.invoices');
+Route::get('invoices/unpaid', [\App\Http\Controllers\InvoicesController::class,'unpaidInvoices'])->name('unpaid.invoices');
+Route::get('invoices/partpaid', [\App\Http\Controllers\InvoicesController::class,'partpaidInvoices'])->name('partpaid.invoices');
 
 ###################################################################
 
