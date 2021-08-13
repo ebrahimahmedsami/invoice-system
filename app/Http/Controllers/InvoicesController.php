@@ -109,7 +109,6 @@ class InvoicesController extends Controller
             'note' => $request->note,
             'user' => Auth::user()->name,
         ]);
-
         if($request->hasFile('pic')){
             $invoice_id = Invoices::latest()->first()->id;
             $image = $request->file('pic');
@@ -253,13 +252,15 @@ class InvoicesController extends Controller
     public function destroy($invoice_id)
     {
         $invoice = Invoices::find($invoice_id);
-        $details = InvoicesDetails::where('invoice_id',$invoice_id)->first();
+        $details = InvoicesDetails::where('invoice_id',$invoice_id)->get();
         $attachment = InvoicesAttachment::where('invoice_id',$invoice_id)->get();
 
         if(!$invoice){
             return redirect()->back();
         }
-        $details->delete();
+        foreach ($details as $d){
+            $d->delete();
+        }
         foreach ($attachment as $a){
             $a->delete();
             $files = Storage::disk('invoice_uploads')->delete($a->file_name);

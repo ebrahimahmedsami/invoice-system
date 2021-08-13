@@ -39,6 +39,14 @@ Route::get('invoices/partpaid', [\App\Http\Controllers\InvoicesController::class
 ###################################################################
 
 ################# invoicesDetails routes ##################################
+Route::get('archive/add/{invoice_id}', [\App\Http\Controllers\ArchiveController::class,'addToArchive'])->name('add.archive');
+Route::get('archive/show', [\App\Http\Controllers\ArchiveController::class,'index'])->name('archive');
+Route::get('archive/restore/{invoice_id}', [\App\Http\Controllers\ArchiveController::class,'restoreArchive']);
+Route::get('archive/delete/{invoice_id}', [\App\Http\Controllers\ArchiveController::class,'destroy']);
+
+###################################################################
+
+################# invoicesDetails routes ##################################
 Route::get('invoices/details/{invoice_id}', [\App\Http\Controllers\InvoicesDetailsController::class,'details'])->name('get.invoice.details');
 Route::get('view-file/{file_name}', [\App\Http\Controllers\InvoicesDetailsController::class,'view_file']);
 Route::get('download-file/{file_name}', [\App\Http\Controllers\InvoicesDetailsController::class,'download_file']);
@@ -64,5 +72,13 @@ Route::get('product/delete/{product_id}', [\App\Http\Controllers\ProductsControl
 Route::get('product/edit/{product_id}', [\App\Http\Controllers\ProductsController::class,'edit'])->name('edit.product');
 Route::post('product/update', [\App\Http\Controllers\ProductsController::class,'update'])->name('update.product');
 ###################################################################
+
+################# roles and permissions routes ##################################
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles','App\Http\Controllers\RoleController');
+    Route::resource('users','App\Http\Controllers\UserController');
+});
+###################################################################
+
 //get all pages
 Route::get('/{page}', [\App\Http\Controllers\AdminController::class,'index']);

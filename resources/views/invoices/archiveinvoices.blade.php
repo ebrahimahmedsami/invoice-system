@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    قائمة الفواتير
+     الفواتير المؤرشفة
 @stop
 @section('css')
     <!-- Internal Data table css -->
@@ -17,14 +17,26 @@
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h4 class="content-title mb-0 my-auto"> الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة الفواتير</span>
+							<h4 class="content-title mb-0 my-auto"> الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ الفواتير المؤرشفة</span>
 						</div>
 					</div>
 				</div>
 				<!-- breadcrumb -->
 @endsection
 @section('content')
-    @if(\Illuminate\Support\Facades\Session::has('success'))
+    @if(\Illuminate\Support\Facades\Session::has('restore'))
+        <script>
+            window.onload = function (){
+                notif({
+                    msg: "لقد تم إستعادة الفاتورة بنجاح",
+                    type: "success"
+                });
+            }
+        </script>
+        {{\Illuminate\Support\Facades\Session::get('restore')}}
+        </div>
+    @endif
+    @if(\Illuminate\Support\Facades\Session::has('success_deleted'))
         <script>
             window.onload = function (){
                 notif({
@@ -33,31 +45,7 @@
                 });
             }
         </script>
-            {{\Illuminate\Support\Facades\Session::get('success')}}
-        </div>
-    @endif
-    @if(\Illuminate\Support\Facades\Session::has('success_status'))
-        <script>
-            window.onload = function (){
-                notif({
-                    msg: "تم تعديل حالة الفاتورة بنجاح",
-                    type: "success"
-                });
-            }
-        </script>
-        {{\Illuminate\Support\Facades\Session::get('success_status')}}
-        </div>
-    @endif
-    @if(\Illuminate\Support\Facades\Session::has('archived'))
-        <script>
-            window.onload = function (){
-                notif({
-                    msg: "تم  أرشفة الفاتورة بنجاح",
-                    type: "success"
-                });
-            }
-        </script>
-        {{\Illuminate\Support\Facades\Session::get('archived')}}
+        {{\Illuminate\Support\Facades\Session::get('success_deleted')}}
         </div>
     @endif
     <div class="row row-sm">
@@ -65,11 +53,10 @@
             <div class="card">
                 <div class="card-header pb-0">
                     <div class="d-flex justify-content-between">
-                        <h4 class="card-title mg-b-0">قائمة الفواتير</h4>
+                        <h4 class="card-title mg-b-0">الفواتير  المؤرشفة</h4>
                     </div>
                 </div>
                 <div class="card-body">
-                    <a href="{{route('edit.invoice')}}"><button style="margin-bottom: 10px;font-weight: bold;" class="btn btn-primary">إضافة فاتورة</button></a>
                     <div class="table-responsive">
                         <table class="table text-md-nowrap" id="example1" data-page-length="50">
                             <thead>
@@ -120,10 +107,8 @@
                                         <button aria-expanded="false" aria-haspopup="true" class="btn ripple btn-primary" style="width: 70px;height: 30px;
                                                 padding: 0;" data-toggle="dropdown" id="dropdownMenuButton" type="button">اختر<i class="fas fa-caret-down ml-1"></i></button>
                                         <div  class="dropdown-menu tx-13">
-                                            <a class="dropdown-item" href="{{url('invoice/edit/'.$invoice->id)}}">تعديل</a>
-                                            <a class="dropdown-item" href="{{url('invoice/delete/'.$invoice->id)}}">حذف</a>
-                                            <a class="dropdown-item" href="{{url('invoice/editstatus/'.$invoice->id)}}">تعديل حالة</a>
-                                            <a class="dropdown-item" href="{{url('archive/add/'.$invoice->id)}}">نقل إالي الأرشيف</a>
+                                            <a class="dropdown-item" href="{{url('archive/restore/'.$invoice->id)}}">إستعادة</a>
+                                            <a class="dropdown-item" href="{{url('archive/delete/'.$invoice->id)}}">حذف</a>
                                         </div>
                                     </div>
                                 </td>
